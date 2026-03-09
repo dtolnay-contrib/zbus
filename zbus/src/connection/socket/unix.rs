@@ -326,9 +326,23 @@ fn fd_sendmsg(fd: BorrowedFd<'_>, buffer: &[u8], fds: &[BorrowedFd<'_>]) -> std:
         ));
     }
 
-    #[cfg(not(any(target_os = "macos", target_os = "redox")))]
+    #[cfg(not(any(
+        target_os = "macos",
+        target_os = "ios",
+        target_os = "tvos",
+        target_os = "visionos",
+        target_os = "watchos",
+        target_os = "redox"
+    )))]
     let flags = SendFlags::NOSIGNAL;
-    #[cfg(any(target_os = "macos", target_os = "redox"))]
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "ios",
+        target_os = "tvos",
+        target_os = "visionos",
+        target_os = "watchos",
+        target_os = "redox"
+    ))]
     let flags = SendFlags::empty();
 
     let sent = sendmsg(fd, &iov, &mut ancillary, flags)?;
